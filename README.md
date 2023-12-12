@@ -12,7 +12,6 @@ This program allows you to copy the list of timestamps from your full-length You
 - Utilizes `ffprobe` to locate keyframes for precise clip extraction without the usual half second of missing frames.
   
   ffprobe_command = f"ffprobe -i \"{video_file}\" -skip_frame nokey -select_streams v -show_entries frame=pkt_dts_time -of compact=p=0:nk=1 -v 0"
-- Provides flexibility in specifying timestamps for extraction.
 - Does not re-encode the video making it extremely fast and lossless
 
 ## Requirements
