@@ -61,12 +61,18 @@ print(timestamp_file)
 keyframe_db = create_keyframe_database(video_file)
 
 # Extract clips based on timestamps
-for i, timestamp in enumerate(range(len(timestamps) - 1), start=1):
-    start_time_str, description = timestamps[timestamp].split(' ', 1)
-    end_time_str, _ = timestamps[timestamp + 1].split(' ', 1)
-    
-    start_time = timestamp_to_seconds(start_time_str)
-    end_time = timestamp_to_seconds(end_time_str)
+for i, timestamp in enumerate(range(len(timestamps)), start=1):
+    if i == len(timestamps):
+        # For the last timestamp, set the end time to the end of the video file
+        start_time_str, description = timestamps[timestamp].split(' ', 1)
+        start_time = timestamp_to_seconds(start_time_str)
+        end_time = float('inf')  # Set end time to infinity for the last clip
+    else:
+        start_time_str, description = timestamps[timestamp].split(' ', 1)
+        end_time_str, _ = timestamps[timestamp + 1].split(' ', 1)
+        
+        start_time = timestamp_to_seconds(start_time_str)
+        end_time = timestamp_to_seconds(end_time_str)
     
     # Find nearest keyframes to the provided timestamps
     start_keyframe = find_nearest_keyframe(start_time, keyframe_db)
@@ -75,10 +81,17 @@ for i, timestamp in enumerate(range(len(timestamps) - 1), start=1):
     # Use ffmpeg to extract the clip with input file name + numbering + timestamp description
     output_filename = f"{output_directory}/{input_filename}_{i:03d}_{description}.mp4"
     start_keyframe = round(start_keyframe, 3)
-    end_keyframe = round(end_keyframe, 3)
+    end_keyframe = round(end_keyframe, 3) if end_time != float('inf') else None  # Set None for end frame if it's the last clip
     
-    ffmpeg_command = f'ffmpeg -i "{video_file}" -ss {start_keyframe} -to {end_keyframe} -c copy "{output_filename}"'
+    if end_keyframe is not None:
+        ffmpeg_command = f'ffmpeg -i "{video_file}" -ss {start_keyframe} -to {end_keyframe} -c copy "{output_filename}"'
+    else:
+        ffmpeg_command = f'ffmpeg -i "{video_file}" -ss {start_keyframe} -c copy "{output_filename}"'
+    
+    print("Currently executing the following ffmpeg command:")
+    print(ffmpeg_command)
     subprocess.call(ffmpeg_command, shell=True)
 
 print("Extraction completed.")
+
 print("Files are saved in .\output_clips")
