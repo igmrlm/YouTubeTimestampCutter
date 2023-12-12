@@ -82,4 +82,4 @@ for i, timestamp in enumerate(range(len(timestamps) - 1), start=1):
     subprocess.call(ffmpeg_command, shell=True)
 
 print("Extraction completed.")
-print("Files are saved in .\output_clips"
+print("Files are saved in .\output_clips")
