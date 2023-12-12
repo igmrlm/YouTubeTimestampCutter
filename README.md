@@ -4,7 +4,7 @@ This Python script helps extract video clips based on provided timestamps from a
 
 ## Purpose
 
-This program allows you to copy the list of timestamps from your full-length YouTube video into a text file and then automatically cut it into seperate videos based on those timestamps. 
+This program allows you to copy the list of timestamps from your full-length YouTube video into a text file and then automatically cut it into separate videos based on those timestamps. 
 
 ## Features
 
